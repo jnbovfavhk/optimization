@@ -1,0 +1,17 @@
+def dichotomy(f, a, b, e):
+    beta = 2 * e
+    en = e + 1
+    while en > e:
+
+        x1 = (a + b - beta) / 2
+        x2 = (a + b + beta) / 2
+
+        if f(x1) <= f(x2):
+            b = x2
+        else:
+            a = x1
+        en = round((b - a) / 2, 5)
+    return round((a + b) / 2, 3)
+
+
+print(dichotomy(lambda x: x ** 2 - 10 * x + 2, 3, 6, 0.1))
