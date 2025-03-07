@@ -1,0 +1,47 @@
+from itertools import permutations
+
+
+def parabola_minimum(f, a, b, e):
+    list_mins = list()
+    x1 = a
+    x2 = (a + b) / 2
+    x3 = b
+
+    i = 0
+
+    ex_combs = [[x1, x2, x3]]
+    while i < 1000:
+        a1 = (f(x2) - f(x1)) / (x2 - x1)
+        a2 = 1 / (x3 - x2) * ((f(x3) - f(x1)) / (x3 - x1) - a1)
+
+        x_min = 0.5 * (x1 + x2 - a1 / a2)
+
+        list_mins.append(x_min)
+        if len(list_mins) > 1:
+            if (list_mins[-1] - list_mins[-2]) < e:
+                print(i)
+                return list_mins[-1]
+
+        new_values = choose_points(f, x1, x2, x3, list_mins[-1], ex_combs)
+        x1 = new_values[0]
+        x2 = new_values[1]
+        x3 = new_values[2]
+
+        ex_combs.append([x1, x2, x3])
+
+        i += 1
+
+
+def choose_points(f, x1, x2, x3, x_min, ex_combs):
+    options_of_points = permutations([x1, x2, x3, x_min], 3)
+    for permutation in options_of_points:
+        permutation = list(permutation)
+
+        if permutation == sorted(permutation):
+            # Если выборка не равна ни одной из предыдущих выборок
+            if all(permutation != _ for _ in ex_combs):
+                if f(permutation[0]) >= f(permutation[1]) and f(permutation[1]) <= f(permutation[2]):
+                    return permutation[0], permutation[1], permutation[2]
+
+
+print(parabola_minimum(lambda x: x ** 3 + 4 * x ** 2 + 2 * x + 1, -1, 1, 0.0000001))
